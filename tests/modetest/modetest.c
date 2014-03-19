@@ -1532,6 +1532,9 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
+	/* if possible, request universal planes: */
+	drmSetClientCap(dev.fd, DRM_CLIENT_CAP_UNIVERSAL_PLANES, 1);
+
 	dev.resources = get_resources(&dev);
 	if (!dev.resources) {
 		drmClose(dev.fd);
