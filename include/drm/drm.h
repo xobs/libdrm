@@ -181,7 +181,6 @@ enum drm_map_type {
 	_DRM_AGP = 3,		  /**< AGP/GART */
 	_DRM_SCATTER_GATHER = 4,  /**< Scatter/gather memory for PCI DMA */
 	_DRM_CONSISTENT = 5,	  /**< Consistent memory for PCI DMA */
-	_DRM_GEM = 6		  /**< GEM object */
 };
 
 /**
@@ -435,7 +434,7 @@ struct drm_draw {
  * DRM_IOCTL_UPDATE_DRAW ioctl argument type.
  */
 typedef enum {
-	DRM_DRAWABLE_CLIPRECTS
+	DRM_DRAWABLE_CLIPRECTS,
 } drm_drawable_info_type_t;
 
 struct drm_update_draw {
@@ -467,12 +466,15 @@ struct drm_irq_busid {
 enum drm_vblank_seq_type {
 	_DRM_VBLANK_ABSOLUTE = 0x0,	/**< Wait for specific vblank sequence number */
 	_DRM_VBLANK_RELATIVE = 0x1,	/**< Wait for given number of vblanks */
+	/* bits 1-6 are reserved for high crtcs */
+	_DRM_VBLANK_HIGH_CRTC_MASK = 0x0000003e,
 	_DRM_VBLANK_EVENT = 0x4000000,   /**< Send event instead of blocking */
 	_DRM_VBLANK_FLIP = 0x8000000,   /**< Scheduled buffer swap should flip */
 	_DRM_VBLANK_NEXTONMISS = 0x10000000,	/**< If missed, wait for next vblank */
 	_DRM_VBLANK_SECONDARY = 0x20000000,	/**< Secondary display controller */
 	_DRM_VBLANK_SIGNAL = 0x40000000	/**< Send signal instead of blocking, unsupported */
 };
+#define _DRM_VBLANK_HIGH_CRTC_SHIFT 1
 
 #define _DRM_VBLANK_TYPES_MASK (_DRM_VBLANK_ABSOLUTE | _DRM_VBLANK_RELATIVE)
 #define _DRM_VBLANK_FLAGS_MASK (_DRM_VBLANK_EVENT | _DRM_VBLANK_SIGNAL | \
@@ -612,6 +614,18 @@ struct drm_gem_open {
 	__u64 size;
 };
 
+#define DRM_CAP_DUMB_BUFFER		0x1
+#define DRM_CAP_VBLANK_HIGH_CRTC	0x2
+#define DRM_CAP_DUMB_PREFERRED_DEPTH	0x3
+#define DRM_CAP_DUMB_PREFER_SHADOW	0x4
+#define DRM_CAP_PRIME			0x5
+#define  DRM_PRIME_CAP_IMPORT		0x1
+#define  DRM_PRIME_CAP_EXPORT		0x2
+#define DRM_CAP_TIMESTAMP_MONOTONIC	0x6
+#define DRM_CAP_ASYNC_PAGE_FLIP		0x7
+#define DRM_CAP_CURSOR_WIDTH		0x8
+#define DRM_CAP_CURSOR_HEIGHT		0x9
+
 /** DRM_IOCTL_GET_CAP ioctl argument type */
 struct drm_get_cap {
 	__u64 capability;
@@ -626,6 +640,14 @@ struct drm_get_cap {
  * drm_mode_modeinfo.
  */
 #define DRM_CLIENT_CAP_STEREO_3D	1
+
+/**
+ * DRM_CLIENT_CAP_UNIVERSAL_PLANES
+ *
+ * If set to 1, the DRM core will expose all planes (overlay, primary, and
+ * cursor) to userspace.
+ */
+#define DRM_CLIENT_CAP_UNIVERSAL_PLANES  2
 
 /** DRM_IOCTL_SET_CLIENT_CAP ioctl argument type */
 struct drm_set_client_cap {
@@ -728,8 +750,8 @@ struct drm_prime_handle {
 #define DRM_IOCTL_MODE_SETGAMMA		DRM_IOWR(0xA5, struct drm_mode_crtc_lut)
 #define DRM_IOCTL_MODE_GETENCODER	DRM_IOWR(0xA6, struct drm_mode_get_encoder)
 #define DRM_IOCTL_MODE_GETCONNECTOR	DRM_IOWR(0xA7, struct drm_mode_get_connector)
-#define DRM_IOCTL_MODE_ATTACHMODE	DRM_IOWR(0xA8, struct drm_mode_mode_cmd)
-#define DRM_IOCTL_MODE_DETACHMODE	DRM_IOWR(0xA9, struct drm_mode_mode_cmd)
+#define DRM_IOCTL_MODE_ATTACHMODE	DRM_IOWR(0xA8, struct drm_mode_mode_cmd) /* deprecated (never worked) */
+#define DRM_IOCTL_MODE_DETACHMODE	DRM_IOWR(0xA9, struct drm_mode_mode_cmd) /* deprecated (never worked) */
 
 #define DRM_IOCTL_MODE_GETPROPERTY	DRM_IOWR(0xAA, struct drm_mode_get_property)
 #define DRM_IOCTL_MODE_SETPROPERTY	DRM_IOWR(0xAB, struct drm_mode_connector_set_property)
@@ -791,16 +813,6 @@ struct drm_event_vblank {
 	__u32 reserved;
 };
 
-#define DRM_CAP_DUMB_BUFFER 0x1
-#define DRM_CAP_VBLANK_HIGH_CRTC   0x2
-#define DRM_CAP_DUMB_PREFERRED_DEPTH 0x3
-#define DRM_CAP_DUMB_PREFER_SHADOW 0x4
-#define DRM_CAP_PRIME 0x5
-#define DRM_CAP_TIMESTAMP_MONOTONIC 0x6
-#define DRM_CAP_ASYNC_PAGE_FLIP 0x7
-
-#define DRM_PRIME_CAP_IMPORT 0x1
-#define DRM_PRIME_CAP_EXPORT 0x2
 
 /* typedef area */
 typedef struct drm_clip_rect drm_clip_rect_t;
