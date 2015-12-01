@@ -56,6 +56,7 @@ libdrm_omap.pc
 libdrm_exynos.pc
 libdrm_freedreno.pc
 libdrm_amdgpu.pc
+libdrm_etnaviv.pc
 libkms.pc
 libtool
 ltmain.sh
@@ -95,4 +96,6 @@ tests/kmstest/kmstest
 tests/vbltest/vbltest
 tests/radeon/radeon_ttm
 tests/exynos/exynos_fimg2d_test
+tests/etnaviv/etnaviv_2d_test
+tests/etnaviv/etnaviv_cmd_stream_test
 man/*.3
