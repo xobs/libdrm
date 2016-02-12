@@ -99,3 +99,16 @@ tests/exynos/exynos_fimg2d_test
 tests/etnaviv/etnaviv_2d_test
 tests/etnaviv/etnaviv_cmd_stream_test
 man/*.3
+/.pc/
+/build/
+/debian/autoreconf.after
+/debian/autoreconf.before
+/debian/libdrm-dev/
+/debian/libdrm-etnaviv0/
+/debian/libdrm-exynos1/
+/debian/libdrm-freedreno1/
+/debian/libdrm-nouveau2/
+/debian/libdrm-omap1/
+/debian/libdrm2-udeb/
+/debian/libdrm2/
+/debian/tmp/
